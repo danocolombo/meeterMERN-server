@@ -43,6 +43,21 @@ router.post(
     }
   }
 );
+
+// @route   GET api/person/
+router.get('/', async (req, res) => {
+  try {
+    //this is going to return the persons that are
+    // not defined with admin
+    const persons = await Person.find( { admin: true});
+    res.json(persons);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');  
+  }
+});
+
+
 // @route    GET api/person/all
 // @desc     Get all persons
 // @access   Public
