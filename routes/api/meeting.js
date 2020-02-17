@@ -234,12 +234,12 @@ router.get('/:id', auth, async (req, res) => {
 // @route    DELETE api/profile
 // @desc     Delete profile, user & posts
 // @access   Private
-router.delete('/', auth, async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     // Remove profile
-    await Meeting.findOneAndRemove({ _id: req.meetingId });
-
-    res.json({ msg: 'Meeting deleted' });
+    await Meeting.findOneAndRemove({ _id: req.params.id });
+    const feedback = 'Meeting deleted (' + req.params.id + ')';
+    res.json({ msg: feedback });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
