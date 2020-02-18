@@ -12,63 +12,62 @@ const Person = require('../../models/Person');
 // @desc     Register person
 // @access   Public
 router.post(
-  '/',
-  [
-    check('name', 'Name is required')
-      .not()
-      .isEmpty()
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    '/',
+    [
+        check('name', 'Name is required')
+            .not()
+            .isEmpty()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-    const { name, email, phone } = req.body;
-    const personFields = {};
-    personFields.name = name;
-    if (email) personFields.email = email;
-    if (phone) personFields.phone = phone;
+        const { name, email, phone } = req.body;
+        const personFields = {};
+        personFields.name = name;
+        if (email) personFields.email = email;
+        if (phone) personFields.phone = phone;
 
-    try {
-      let person = await Person.findOneAndUpdate(
-        { name: name },
-        { $set: personFields },
-        { new: true, upsert: true }
-      );
-      res.json(person);
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+        try {
+            let person = await Person.findOneAndUpdate(
+                { name: name },
+                { $set: personFields },
+                { new: true, upsert: true }
+            );
+            res.json(person);
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server error');
+        }
     }
-  }
 );
 
 // @route   GET api/person/
 router.get('/', async (req, res) => {
-  try {
-    //this is going to return the persons that are
-    // not defined with admin
-    const persons = await Person.find( { admin: true});
-    res.json(persons);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');  
-  }
+    try {
+        //this is going to return the persons that are
+        // not defined with admin
+        const persons = await Person.find({ system: { $ne: true } });
+        res.json(persons);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
 });
-
 
 // @route    GET api/person/all
 // @desc     Get all persons
 // @access   Public
 router.get('/all', async (req, res) => {
-  try {
-    const persons = await Person.find();
-    res.json(persons);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
+    try {
+        const persons = await Person.find();
+        res.json(persons);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
 });
 
 // new inline getMeeting....
@@ -76,32 +75,32 @@ router.get('/all', async (req, res) => {
 // @desc     Get meeting by ID
 // @access   Private
 router.get('/:id', auth, async (req, res) => {
-  try {
-    const person = await Person.findById(req.params.id);
+    try {
+        const person = await Person.findById(req.params.id);
 
-    // Check for ObjectId format and post
-    if (!req.params.id.match(/^[0-9a-fA-F]{24}$/) || !person) {
-      return res.status(404).json({ msg: 'Person not found' });
+        // Check for ObjectId format and post
+        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/) || !person) {
+            return res.status(404).json({ msg: 'Person not found' });
+        }
+
+        res.json(person);
+    } catch (err) {
+        console.error(err.message);
+
+        res.status(500).send('Server Error');
     }
-
-    res.json(person);
-  } catch (err) {
-    console.error(err.message);
-
-    res.status(500).send('Server Error');
-  }
 });
 
 // @route    DELETE api/person/:id
 // @desc     Delete meeting by ID
 // @access   Private
 router.delete('/:id', auth, async (req, res) => {
-  try {
-    await Person.findOneAndRemove({ _id: req.params.id });
-    return res.status(200).json({ msg: 'person removed' });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ msg: 'Server error' });
-  }
+    try {
+        await Person.findOneAndRemove({ _id: req.params.id });
+        return res.status(200).json({ msg: 'person removed' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ msg: 'Server error' });
+    }
 });
 module.exports = router;
