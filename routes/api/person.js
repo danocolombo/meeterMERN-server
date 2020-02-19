@@ -48,8 +48,10 @@ router.post(
 router.get('/', async (req, res) => {
     try {
         //this is going to return the persons that are
-        // not defined with admin
-        const persons = await Person.find({ system: { $ne: true } });
+        // not defined with system
+        const persons = await Person.find({ system: { $ne: true } }).sort({
+            name: 1
+        });
         res.json(persons);
     } catch (err) {
         console.error(err.message);
@@ -62,7 +64,7 @@ router.get('/', async (req, res) => {
 // @access   Public
 router.get('/all', async (req, res) => {
     try {
-        const persons = await Person.find();
+        const persons = await Person.find().sort({ name: 1 });
         res.json(persons);
     } catch (err) {
         console.error(err.message);

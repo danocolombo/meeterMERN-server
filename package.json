@@ -1,7 +1,7 @@
 {
-  "name": "devconnector",
+  "name": "Meeter_Services",
   "version": "1.0.0",
-  "description": "Social network for developers",
+  "description": "Backend to Community Administration Tool",
   "main": "server.js",
   "scripts": {
     "start": "node server",
