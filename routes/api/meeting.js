@@ -62,7 +62,7 @@ router.post(
             facilitator,
             worship,
             cafe,
-            teacher,
+            supportRole,
             meal,
             mealCount,
             attendance,
@@ -84,12 +84,12 @@ router.post(
             if (facilitator) {
                 mInput.facilitator = facilitator;
             } else {
-                mInput.facilitator = req.user.id;
+                mInput.facilitator = req.user.name;
             }
             mInput.title = title;
             mInput.meetingDate = meetingDate;
             mInput.meetingType = meetingType;
-            if (teacher) meetingFields.teacher = teacher;
+            if (supportRole) meetingFields.supportRole = teacher;
             if (worship) meetingFields.worship = worship;
             if (cafe) meetingFields.cafe = cafe;
             if (teacher) meetingFields.teacher = teacher;
@@ -132,17 +132,15 @@ router.post(
             if (facilitator) {
                 meetingFields.facilitator = facilitator;
             } else {
-                meetingFields.facilitator = req.user.id;
+                meetingFields.facilitator = req.user.name;
             }
 
             meetingFields.title = title;
             meetingFields.meetingDate = meetingDate;
             meetingFields.meetingType = meetingType;
-            if (teacher) meetingFields.teacher = teacher;
+            if (supportRole) meetingFields.supportRole = supportRole;
             if (worship) meetingFields.worship = worship;
             if (cafe) meetingFields.cafe = cafe;
-            if (teacher) meetingFields.teacher = teacher;
-
             if (meal) meetingFields.meal = meal;
             if (mealCount) {
                 meetingFields.mealCount = mealCount;
@@ -185,6 +183,36 @@ router.get('/', async (req, res) => {
         const meetings = await Meeting.find()
             .sort({ meetingDate: 1 })
             .populate('people', ['name']);
+        res.json(meetings);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+// @route    GET api/meeting/future
+// @desc     Get all meetings today and future
+// @access   Public
+router.get('/future', async (req, res) => {
+    try {
+        var tDay = new Date();
+        const meetings = await Meeting.find({
+            meetingDate: { $gte: tDay }
+        }).sort({ meetingDate: 0 });
+        res.json(meetings);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+// @route    GET api/meeting/history
+// @desc     Get all meetings today and future
+// @access   Public
+router.get('/history', async (req, res) => {
+    try {
+        var tDay = new Date();
+        const meetings = await Meeting.find({
+            meetingDate: { $lt: tDay }
+        }).sort({ meetingDate: -1 });
         res.json(meetings);
     } catch (err) {
         console.error(err.message);
