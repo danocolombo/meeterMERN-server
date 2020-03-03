@@ -28,7 +28,10 @@ const MeetingSchema = new mongoose.Schema({
     mealCount: {
         type: Number
     },
-    cafe: {
+    mealCoordinator: {
+        type: String
+    },
+    cafeCoordinator: {
         type: String
     },
     attendance: {

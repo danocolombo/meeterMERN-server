@@ -38,9 +38,9 @@ router.post(
     [
         auth,
         [
-            check('title', 'Title is required')
-                .not()
-                .isEmpty(),
+            // check('title', 'Title is required')
+            //     .not()
+            //     .isEmpty(),
             check('meetingDate', 'Meeting date is required')
                 .not()
                 .isEmpty(),
@@ -56,122 +56,144 @@ router.post(
         }
         const {
             meetingId,
-            title,
             meetingDate,
-            meetingType,
             facilitator,
-            worship,
-            cafe,
+            meetingType,
+            title,
             supportRole,
-            meal,
-            mealCount,
+            worship,
             attendance,
             donations,
+            meal,
+            mealCoordinator,
+            mealCount,
+            cafeCoordinator,
             notes
         } = req.body;
-        if (meetingId) {
-            // we got meeting ID, so attempting to update
-            //=============================================
-            // just because we to a variable, does not mean
-            // it is a valid id. Verify
-            var mongodbObjID = require('mongodb').ObjectID;
-            if (!mongodbObjID.isValid(meetingId)) {
-                return res.status(400).json({ msg: 'bad rquest' });
-            }
-            //==========================================
-            // now load object with all supported variables
-            const mInput = new Meeting();
-            if (facilitator) {
-                mInput.facilitator = facilitator;
-            } else {
-                mInput.facilitator = req.user.name;
-            }
-            mInput.title = title;
-            mInput.meetingDate = meetingDate;
-            mInput.meetingType = meetingType;
-            if (supportRole) meetingFields.supportRole = teacher;
-            if (worship) meetingFields.worship = worship;
-            if (cafe) meetingFields.cafe = cafe;
-            if (teacher) meetingFields.teacher = teacher;
+        // if (meetingId) {
+        //     // we got meeting ID, so attempting to update
+        //     //=============================================
+        //     // just because we to a variable, does not mean
+        //     // it is a valid id. Verify
+        //     var mongodbObjID = require('mongodb').ObjectID;
+        //     if (!mongodbObjID.isValid(meetingId)) {
+        //         return res.status(400).json({ msg: 'bad rquest' });
+        //     }
+        //     //==========================================
+        //     // now load object with all supported variables
+        //     const mInput = new Meeting();
+        //     if (facilitator) {
+        //         mInput.facilitator = facilitator;
+        //     } else {
+        //         mInput.facilitator = req.user.name;
+        //     }
+        //     mInput.title = title;
+        //     mInput.meetingDate = meetingDate;
+        //     mInput.meetingType = meetingType;
+        //     if (supportRole) meetingFields.supportRole = teacher;
+        //     if (worship) meetingFields.worship = worship;
+        //     if (cafe) meetingFields.cafe = cafe;
+        //     if (teacher) meetingFields.teacher = teacher;
 
-            if (meal) mInput.meal = meal;
-            if (mealCount) {
-                mInput.mealCount = mealCount;
-            } else {
-                mInput.mealCount = 0;
-            }
-            if (attendance) {
-                mInput.attendance = attendance;
-            } else {
-                mInput.attendance = 0;
-            }
-            if (donations) {
-                meetingFields.donations = donations;
-            } else {
-                meetingFields.donations = 0;
-            }
-            if (notes) mInput.notes = notes;
-            try {
-                // Using upsert option (creates new doc if no match is found):
-                let meeting = await Meeting.updateOne({ id: meetingId });
-                res.json(meeting);
-            } catch (err) {
-                console.error(err.message);
-                res.status(500).send('Server Error');
-            }
+        //     if (meal) mInput.meal = meal;
+        //     if (mealCount) {
+        //         mInput.mealCount = mealCount;
+        //     } else {
+        //         mInput.mealCount = 0;
+        //     }
+        //     if (attendance) {
+        //         mInput.attendance = attendance;
+        //     } else {
+        //         mInput.attendance = 0;
+        //     }
+        //     if (donations) {
+        //         meetingFields.donations = donations;
+        //     } else {
+        //         meetingFields.donations = 0;
+        //     }
+        //     if (notes) mInput.notes = notes;
+        //     try {
+        //         // Using upsert option (creates new doc if no match is found):
+        //         let meeting = await Meeting.updateOne({ id: meetingId });
+        //         res.json(meeting);
+        //     } catch (err) {
+        //         console.error(err.message);
+        //         res.status(500).send('Server Error');
+        //     }
 
-            // await mInput.save();
-            // res.json(mInput);
-            // console.log(mInput);
-            // return res.status(200).json({ msg: 'going to update' });
+        //     // await mInput.save();
+        //     // res.json(mInput);
+        //     // console.log(mInput);
+        //     // return res.status(200).json({ msg: 'going to update' });
+        // } else {
+        //===========================
+        //===========================
+        //we did not get a meeting ID, so we are going with
+        // with an insert.
+        // Build meeting object
+        //##################
+        // meetingId,
+        // meetingDate,
+        // facilitator,
+        // meetingType,
+        // title,
+        // supportRole,
+        // worship,
+        // attendance,
+        // donations,
+        // meal,
+        // mealCoordinator,
+        // mealCount,
+        // cafeCoordinator,
+        // notes
+        //##################
+        const meetingFields = {};
+        //first two are required, no need to check.
+        meetingFields.meetingDate = meetingDate;
+        meetingFields.meetingType = meetingType;
+        if (meetingId) meetingFields.meetingId = meetingId;
+        if (facilitator) meetingFields.facilitator = facilitator;
+        if (title) meetingFields.title = title;
+        if (supportRole) meetingFields.supportRole = supportRole;
+        if (worship) meetingFields.worship = worship;
+        if (attendance) {
+            meetingFields.attendance = attendance;
         } else {
-            //we did not get a meeting ID, so we are going with
-            // with an insert.
-            // Build meeting object
-            const meetingFields = {};
-            if (facilitator) {
-                meetingFields.facilitator = facilitator;
-            } else {
-                meetingFields.facilitator = req.user.name;
-            }
-
-            meetingFields.title = title;
-            meetingFields.meetingDate = meetingDate;
-            meetingFields.meetingType = meetingType;
-            if (supportRole) meetingFields.supportRole = supportRole;
-            if (worship) meetingFields.worship = worship;
-            if (cafe) meetingFields.cafe = cafe;
-            if (meal) meetingFields.meal = meal;
-            if (mealCount) {
-                meetingFields.mealCount = mealCount;
-            } else {
-                meetingFields.mealCount = 0;
-            }
-            if (attendance) {
-                meetingFields.attendance = attendance;
-            } else {
-                meetingFields.attendance = 0;
-            }
-            if (donations) {
-                meetingFields.donations = donations;
-            } else {
-                meetingFields.donations = 0;
-            }
-            if (notes) meetingFields.notes = notes;
-
-            try {
-                // Using upsert option (creates new doc if no match is found):
-                let meeting = await Meeting.findOneAndUpdate(
-                    { facilitator: null },
-                    { $set: meetingFields },
-                    { new: true, upsert: true }
-                );
-                res.json(meeting);
-            } catch (err) {
-                console.error(err.message);
-                res.status(500).send('Server Error');
-            }
+            meetingFields.attendance = 0;
         }
+        if (donations) {
+            meetingFields.donations = donations;
+        } else {
+            meetingFields.donations = 0;
+        }
+        if (meal) meetingFields.meal = meal;
+        if (mealCoordinator) meetingFields.mealCoordinator = mealCoordinator;
+        if (mealCount) {
+            meetingFields.mealCount = mealCount;
+        } else {
+            meetingFields.mealCount = 0;
+        }
+        if (cafeCoordinator) meetingFields.cafeCoordinator = cafeCoordinator;
+        if (notes) meetingFields.notes = notes;
+
+        try {
+            // Using upsert option (creates new doc if no match is found):
+            let meeting = await Meeting.findOneAndUpdate(
+                { _id: meetingId },
+                { $set: meetingFields },
+                { new: true, upsert: true }
+            );
+            // console.clear;
+            // console.log(meetingId);
+            // console.log(JSON.stringify(meetingFields));
+            res.json(meeting);
+            // console.log(JSON.stringify(meetingFields));
+            // res.json('there we are...');
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error');
+        }
+        // }
     }
 );
 
