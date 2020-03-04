@@ -178,15 +178,27 @@ router.post(
 
         try {
             // Using upsert option (creates new doc if no match is found):
-            let meeting = await Meeting.findOneAndUpdate(
-                { _id: meetingId },
-                { $set: meetingFields },
-                { new: true, upsert: true }
-            );
+            console.table(meetingFields);
+            if (meetingId) {
+                let meeting = await Meeting.findOneAndUpdate(
+                    { _id: meetingId },
+                    { $set: meetingFields },
+                    { new: true, upsert: true }
+                );
+                res.json(meeting);
+            } else {
+                // we are going to do insert...
+                let meeting2 = await Meeting.findOneAndUpdate(
+                    { facilitator: 'aBrandNewEntry' },
+                    { $set: meetingFields },
+                    { new: true, upsert: true, returnNewDocument: true }
+                );
+                res.json(meeting2);
+            }
             // console.clear;
             // console.log(meetingId);
             // console.log(JSON.stringify(meetingFields));
-            res.json(meeting);
+            // res.json(meeting2);
             // console.log(JSON.stringify(meetingFields));
             // res.json('there we are...');
         } catch (err) {
