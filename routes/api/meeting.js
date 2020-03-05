@@ -68,6 +68,10 @@ router.post(
             mealCoordinator,
             mealCount,
             cafeCoordinator,
+            newcomers,
+            nursery,
+            children,
+            youth,
             notes
         } = req.body;
         // if (meetingId) {
@@ -174,8 +178,28 @@ router.post(
             meetingFields.mealCount = 0;
         }
         if (cafeCoordinator) meetingFields.cafeCoordinator = cafeCoordinator;
+        
         if (notes) meetingFields.notes = notes;
-
+        if (newcomers) {
+            meetingFields.newcomers = newcomers;
+        } else {
+            meetingFields.newcomers = 0;
+        }
+        if (nursery) {
+            meetingFields.nursery = nursery;
+        } else {
+            meetingFields.nursery = 0;
+        }
+        if (children) {
+            meetingFields.children = children;
+        } else {
+            meetingFields.children = 0;
+        }
+        if (youth) {
+            meetingFields.youth = youth;
+        } else {
+            meetingFields.youth = 0;
+        }
         try {
             // Using upsert option (creates new doc if no match is found):
             console.table(meetingFields);
