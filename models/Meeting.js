@@ -55,11 +55,10 @@ const MeetingSchema = new mongoose.Schema({
     notes: {
         type: String
     },
-    groups: [
+    group: [
         {
             title: {
-                type: String,
-                required: true
+                type: String
             },
             location: {
                 type: String
@@ -73,7 +72,7 @@ const MeetingSchema = new mongoose.Schema({
             gender: {
                 type: String
             },
-            count: {
+            attendance: {
                 type: Number
             },
             notes: {
