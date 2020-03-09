@@ -11,6 +11,19 @@ const PersonSchema = new mongoose.Schema({
     phone: {
         type: String
     },
+    active: {
+        type: Boolean,
+        default: true
+    },
+    tshirt: {
+        type: String
+    },
+    birthday: {
+        type: String
+    },
+    service: {
+        type: String
+    },
     date: {
         type: Date,
         default: Date.now

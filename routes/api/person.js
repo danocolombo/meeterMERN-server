@@ -29,7 +29,9 @@ router.post(
         personFields.name = name;
         if (email) personFields.email = email;
         if (phone) personFields.phone = phone;
-
+        if (tshirt) personFields.tshirt = tshirt;
+        if (active) personFields.active = active;
+        if (service) personFields.service = servant;
         try {
             let person = await Person.findOneAndUpdate(
                 { name: name },
@@ -58,7 +60,7 @@ router.get('/', async (req, res) => {
         res.status(500).send('Server Error');
     }
 });
-// @route   GET api/person/
+// @route   GET api/servants/
 router.get('/servants', async (req, res) => {
     try {
         //this is going to return the persons that are
