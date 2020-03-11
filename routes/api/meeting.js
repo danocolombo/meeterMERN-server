@@ -151,6 +151,7 @@ router.post(
         // cafeCoordinator,
         // notes
         //##################
+        console.table(req.body);
         const meetingFields = {};
         //first two are required, no need to check.
         meetingFields.meetingDate = meetingDate;
@@ -158,7 +159,11 @@ router.post(
         if (meetingId) meetingFields.meetingId = meetingId;
         if (facilitator) meetingFields.facilitator = facilitator;
         if (title) meetingFields.title = title;
-        if (supportRole) meetingFields.supportRole = supportRole;
+        if (supportRole) {
+            meetingFields.supportRole = supportRole;
+        } else {
+            meetingFields.supportRole = '';
+        }
         if (worship) meetingFields.worship = worship;
         if (attendance) {
             meetingFields.attendance = attendance;
@@ -178,7 +183,7 @@ router.post(
             meetingFields.mealCount = 0;
         }
         if (cafeCoordinator) meetingFields.cafeCoordinator = cafeCoordinator;
-        
+
         if (notes) meetingFields.notes = notes;
         if (newcomers) {
             meetingFields.newcomers = newcomers;

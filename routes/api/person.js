@@ -24,14 +24,23 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { name, email, phone } = req.body;
+        const {
+            name,
+            email,
+            phone,
+            tshirt,
+            birthday,
+            active,
+            service
+        } = req.body;
         const personFields = {};
         personFields.name = name;
         if (email) personFields.email = email;
         if (phone) personFields.phone = phone;
         if (tshirt) personFields.tshirt = tshirt;
+        if (birthday) personFields.birthday = birthday;
         if (active) personFields.active = active;
-        if (service) personFields.service = servant;
+        if (service) personFields.service = service;
         try {
             let person = await Person.findOneAndUpdate(
                 { name: name },
