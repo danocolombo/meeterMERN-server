@@ -68,6 +68,10 @@ router.post(
             mealCoordinator,
             mealCount,
             cafeCoordinator,
+            newcomers,
+            nursery,
+            children,
+            youth,
             notes
         } = req.body;
         // if (meetingId) {
@@ -147,6 +151,7 @@ router.post(
         // cafeCoordinator,
         // notes
         //##################
+        console.table(req.body);
         const meetingFields = {};
         //first two are required, no need to check.
         meetingFields.meetingDate = meetingDate;
@@ -154,7 +159,11 @@ router.post(
         if (meetingId) meetingFields.meetingId = meetingId;
         if (facilitator) meetingFields.facilitator = facilitator;
         if (title) meetingFields.title = title;
-        if (supportRole) meetingFields.supportRole = supportRole;
+        if (supportRole) {
+            meetingFields.supportRole = supportRole;
+        } else {
+            meetingFields.supportRole = '';
+        }
         if (worship) meetingFields.worship = worship;
         if (attendance) {
             meetingFields.attendance = attendance;
@@ -174,8 +183,28 @@ router.post(
             meetingFields.mealCount = 0;
         }
         if (cafeCoordinator) meetingFields.cafeCoordinator = cafeCoordinator;
-        if (notes) meetingFields.notes = notes;
 
+        if (notes) meetingFields.notes = notes;
+        if (newcomers) {
+            meetingFields.newcomers = newcomers;
+        } else {
+            meetingFields.newcomers = 0;
+        }
+        if (nursery) {
+            meetingFields.nursery = nursery;
+        } else {
+            meetingFields.nursery = 0;
+        }
+        if (children) {
+            meetingFields.children = children;
+        } else {
+            meetingFields.children = 0;
+        }
+        if (youth) {
+            meetingFields.youth = youth;
+        } else {
+            meetingFields.youth = 0;
+        }
         try {
             // Using upsert option (creates new doc if no match is found):
             console.table(meetingFields);

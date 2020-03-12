@@ -40,22 +40,42 @@ const MeetingSchema = new mongoose.Schema({
     donations: {
         type: Number
     },
+    nursery: {
+        type: Number
+    },
+    children: {
+        type: Number
+    },
+    youth: {
+        type: Number
+    },
+    newcomers: {
+        type: Number
+    },
     notes: {
         type: String
     },
-    groups: [
+    group: [
         {
             title: {
-                type: String,
-                required: true
+                type: String
             },
             location: {
+                type: String
+            },
+            facilitator: {
+                type: String
+            },
+            cofacilitator: {
                 type: String
             },
             gender: {
                 type: String
             },
-            description: {
+            attendance: {
+                type: Number
+            },
+            notes: {
                 type: String
             }
         }
