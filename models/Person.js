@@ -15,7 +15,7 @@ const PersonSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    tshirt: {
+    shirtSize: {
         type: String
     },
     birthday: {

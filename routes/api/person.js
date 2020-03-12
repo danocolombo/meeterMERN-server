@@ -28,19 +28,42 @@ router.post(
             name,
             email,
             phone,
-            tshirt,
+            shirtSize,
             birthday,
             active,
-            service
+            service,
+            training,
+            system,
+            notes
         } = req.body;
         const personFields = {};
         personFields.name = name;
-        if (email) personFields.email = email;
-        if (phone) personFields.phone = phone;
-        if (tshirt) personFields.tshirt = tshirt;
-        if (birthday) personFields.birthday = birthday;
+        if (email) {
+            personFields.email = email;
+        } else {
+            personFields.email = '';
+        }
+        if (phone) {
+            personFields.phone = phone;
+        } else {
+            personFields.phone = '';
+        }
+        if (shirtSize) {
+            personFields.shirtSize = shirtSize;
+        } else {
+            personFields.shirtSize = '';
+        }
+        if (birthday) {
+            personFields.birthday = birthday;
+        } else {
+            personFields.birthday = '';
+        }
         if (active) personFields.active = active;
-        if (service) personFields.service = service;
+        if (service) {
+            personFields.service = service;
+        } else {
+            personFields.service = '';
+        }
         try {
             let person = await Person.findOneAndUpdate(
                 { name: name },
@@ -75,7 +98,7 @@ router.get('/servants', async (req, res) => {
         //this is going to return the persons that are
         // not defined with system
         const persons = await Person.find({
-            $and: [{ system: { $ne: true } }, { servant: { $exists: true } }]
+            $and: [{ system: { $ne: true } }, { service: { $exists: true } }]
         }).sort({
             name: 1
         });
