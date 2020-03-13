@@ -184,7 +184,7 @@ router.post(
         }
         if (cafeCoordinator) meetingFields.cafeCoordinator = cafeCoordinator;
 
-        if (notes) meetingFields.notes = notes;
+        if (notes) {meetingFields.notes = notes}else{ meetingFields.notes = ""};
         if (newcomers) {
             meetingFields.newcomers = newcomers;
         } else {
@@ -207,6 +207,7 @@ router.post(
         }
         try {
             // Using upsert option (creates new doc if no match is found):
+            console.log('this is going to findOneAndUpdate');
             console.table(meetingFields);
             if (meetingId) {
                 let meeting = await Meeting.findOneAndUpdate(
