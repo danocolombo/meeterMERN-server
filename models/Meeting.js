@@ -55,7 +55,7 @@ const MeetingSchema = new mongoose.Schema({
     notes: {
         type: String
     },
-    group: [
+    groups: [
         {
             title: {
                 type: String
