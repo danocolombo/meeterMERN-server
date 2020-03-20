@@ -5,7 +5,6 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 
 const { check, validationResult } = require('express-validator');
-
 const Meeting = require('../../models/Meeting');
 const User = require('../../models/User');
 const Post = require('../../models/Post');
@@ -447,6 +446,64 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         return res.status(500).json({ msg: 'Server error' });
     }
 });
+
+// @route    PUT api/meeting/group
+// @desc     Add meeting group
+// @access   Private
+router.put(
+    '/group',
+    [
+        auth,
+        [
+            check('title', 'Title is required')
+                .not()
+                .isEmpty(),
+            check('grpGender', 'Gender is required')
+                .not()
+                .isEmpty()
+        ]
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const {
+            title,
+            attendance,
+            gender,
+            location,
+            facilitator,
+            cofacilitator,
+            notes
+        } = req.body;
+
+        const newGrp = {
+            title,
+            attendance,
+            gender,
+            location,
+            facilitator,
+            cofacilitator,
+            notes
+        };
+
+        try {
+            const meeting = await Meeting.findOne({ _id: req.meetingId });
+
+            meeting.groups.unshift(newGroup);
+
+            await meeting.save();
+
+            res.json(meeting);
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).send('Server Error');
+        }
+    }
+);
+// end PUT Group
 
 // @route    PUT api/profile/education
 // @desc     Add profile education
