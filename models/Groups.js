@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const GroupSchema = new mongoose.Schema({
     mid: {
-        type: mongoose.Types.ObjectId,
+        type: String,
         required: true
     },
     title: {
