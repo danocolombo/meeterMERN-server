@@ -262,6 +262,7 @@ router.get('/', async (req, res) => {
 router.get('/future', async (req, res) => {
     try {
         var tDay = new Date();
+        console.log('tDay:' + tDay);
         const meetings = await Meeting.find({
             meetingDate: { $gte: tDay }
         }).sort({ meetingDate: 0 });
