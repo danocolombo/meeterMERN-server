@@ -3,6 +3,19 @@ const connectDB = require('./config/db');
 const path = require('path');
 
 const app = express();
+//need to allow/set CORS settings to allow communication
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+        'Access-Control-Allow-Methods',
+        'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+    );
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization'
+    );
+    next();
+});
 
 // Connect Database
 connectDB();
